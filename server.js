@@ -6,10 +6,12 @@ import authRoute from "./routes/authRoutes.js"
 import { auth } from "express-openid-connect"
 import { dirname, join } from "node:path"
 import { fileURLToPath } from "node:url"
+import bodyParser from "body-parser"
 import http from "http"
 import path from "path"
 import ejs from "ejs"
 import logger from "./logger/logger.js"
+import calendarRoute from "./routes/appointmentRoutes.js"
 
 dotenv.config()
 
@@ -17,19 +19,21 @@ dotenv.config()
 
 const app = express()
 const MONGODB_URI = process.env.MONGODB_URI
-const PORT = process.env.PORT || 9000
+const PORT = process.env.PORT ||  5000
 app.use(express.json())
 app.use(morgan('dev'))
+app.use(bodyParser.json())
 
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename)
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'src')));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 
 app.use("/", authRoute)
+app.use("/calendar", calendarRoute)
 
 
 //catch other routes

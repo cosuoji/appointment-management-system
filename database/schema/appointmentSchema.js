@@ -5,14 +5,17 @@ const appointmemtSchema = mongoose.Schema({
     userId:{
         type: String
     },
-    appointmentSummary:{
+    title:{
      type: String, 
     }, 
-    date:{
+    start:{
         type: Date,
-        default: "false"
+    }, 
+    end:{
+     type: Date,
     }
+
 }, {timestamps: true})
 
-const toDos = mongoose.model("toDos", toDoSchema)
-export default toDos
+const Appointments = mongoose.model("toDos", appointmemtSchema)
+export default Appointments
