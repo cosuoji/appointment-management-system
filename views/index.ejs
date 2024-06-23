@@ -1,11 +1,85 @@
 <%- include('partials/header') -%>
 
-    <h1 class="text-4xl">Hello World</h1>
 
+   
+    <h1 class="text-4xl">Always On Time Appointments</h1>
     <% if (locals.isAuthenticated) { %>
-        <p>You are logged in. <a href="/profile" class="underline">View your profile</a>.</p>
+        <h1>Daily Appointment Calendar</h1>
+        <div id='calendar'></div>
+        <div>
+            <h3>Add an appointment</h1>
+                <form id="form" class="flex flex-col justify-center" action="/calendar" method="POST">
+                    <label class="block mb-2 text-lg font-medium text-gray-900 dark:text-white" for="title">Title:</label>
+                    <input class="block mb-2 text-lg font-medium text-gray-900 dark:text-white" type="text" class="form-control"
+                        id="title" name="title" placeholder="Appointment-Title" required>
+        
+                    <label class="block mb-2 text-lg font-medium text-gray-900 dark:text-white" for="start">Appointment Start
+                        Time:</label>
+                    <input class="block mb-2 text-lg font-medium text-gray-900 dark:text-white" type="datetime-local" id="start"
+                        name="start" required>
+        
+        
+                    <label class="block mb-2 text-lg font-medium text-gray-900 dark:text-white" for="end">Appointment End
+                        Time:</label>
+                    <input class="block mb-2 text-lg font-medium text-gray-900 dark:text-white" type="datetime-local" id="end"
+                        name="end" required>
+        
+                    <button id="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="submit">Add
+                        Appointment</button>
+                </form>
+        </div>
         <% } else { %>
-            <p>You are not logged in. <a href="/login" class="underline">Login</a>.</p>
+            <p>You are not logged in.<a href="/login" class="underline">Login</a>.</p>
             <% } %>
-
                 <%- include('partials/footer') -%>
+                <script>
+
+
+ 
+
+                     document.addEventListener('DOMContentLoaded', function () {
+                        var calendarEl = document.getElementById('calendar');
+                        let startTime = document.getElementById("start")
+                        let endTime = document.getElementById("end")
+                        let submit = document.getElementById("submit")
+                        let cheat = document.getElementById("cheat")
+                        let titleOfAppointment = document.getElementById("title")
+                        var now = new Date();
+                        var datetime = now.toLocaleString();
+                        let calendarObj = {}
+
+                        startTime.min = new Date().toISOString().slice(0, new Date().toISOString().lastIndexOf(":"));
+                        endTime.min = new Date().toISOString().slice(0, new Date().toISOString().lastIndexOf(":"));
+
+                            let eventsArr = []
+                             window.app =  <%-listOfEvents %>
+                             //calendarObj = Object.assign(calendarObj, window.app)
+                             eventsArr = [...window.app]
+                             console.log(eventsArr)
+
+                        var calendar = new FullCalendar.Calendar(calendarEl, {
+                            initialView: 'dayGridMonth',
+                            initialDate: '2024-06-07',
+                            selectable: true, // important for activating date selectability!
+
+                            editable: true, // important for activating event interactions!
+
+                            headerToolbar: {
+                                left: 'prev,next today',
+                                center: 'title',
+                                right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                            },
+
+                           events: [...eventsArr],
+
+                            eventClick: function (info) {
+                                alert(info.event.id)
+                                console.log("I clicked this")
+                            }
+
+                        });
+
+                    calendar.render();
+                      
+                    });
+                </script>

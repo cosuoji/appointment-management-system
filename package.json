@@ -18,7 +18,6 @@
     "express": "^4.19.2",
     "express-openid-connect": "^2.17.1",
     "joi": "^17.13.1",
-    "moment": "^2.30.1",
     "mongoose": "^8.4.3",
     "morgan": "^1.10.0",
     "morgan-json": "^1.1.0",

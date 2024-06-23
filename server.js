@@ -22,12 +22,16 @@ const MONGODB_URI = process.env.MONGODB_URI
 const PORT = process.env.PORT ||  5000
 app.use(express.json())
 app.use(morgan('dev'))
+app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
+
+
 
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename)
 app.use(express.static(path.join(__dirname, 'src')));
+app.use(express.static(path.join(__dirname, 'views')));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 

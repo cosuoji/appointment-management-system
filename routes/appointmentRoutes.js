@@ -1,19 +1,16 @@
 import { Router } from "express";
 import pkg from "express-openid-connect";
 const {requiresAuth} = pkg
+import * as appointmentController from "../controllers/appointmentController.js"
 
 
 
 
 const calendarRoute = Router();
-
-
-
-
-calendarRoute.get("/create-event", requiresAuth(), appointmentController.getAllAppointment)
-calendarRoute.post("/create-event", requiresAuth(), appointmentController.addAppointment)
-calendarRoute.put("/create-event", requiresAuth(), appointmentController.updateAppointment)
-calendarRoute.delete("/create-event", requiresAuth(), appointmentController.deleteAppointment)
+calendarRoute.get("/",  requiresAuth(), appointmentController.getAllAppointment)
+calendarRoute.post("/",  requiresAuth(), appointmentController.addAppointment)
+calendarRoute.put("/",  requiresAuth(), appointmentController.updateAppointment)
+calendarRoute.delete("/",  requiresAuth(), appointmentController.deleteAppointment)
 
 
 
