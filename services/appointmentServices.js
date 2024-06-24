@@ -12,6 +12,7 @@ export const getAllAppointment = async() =>{
 
      for(let i = 0; i < appointments.length; i++){
         let objToUseToPopulate = {}
+         objToUseToPopulate.userId = appointments[i].auth0Id
          objToUseToPopulate.id = appointments[i]._id.toHexString()
          objToUseToPopulate.title = appointments[i].title
          objToUseToPopulate.start = appointments[i].start
@@ -26,7 +27,7 @@ export const getAllAppointment = async() =>{
     }
 
    }catch(error){
-          throw new ErrorWithStatus(err.message, 500)
+          throw new ErrorWithStatus(error.message, 500)
    }
 }
 
@@ -34,7 +35,6 @@ export const addAppointment = async(title, start, end) =>{
     try{
        // const userToUpDate = await Appointments.findOne({auth0Id: userId})
         const newAppointment = new Appointments({title:title, name: name, nickname: nickname, start: start, end: end, auth0Id: userId, });
-        console.log(userId, nickname, name)
         await newAppointment.save();
 
         let result = await getAllAppointment()
@@ -51,43 +51,47 @@ export const addAppointment = async(title, start, end) =>{
     }
 }
 
-export const updateAppointment = async(appointmentToUpdate) =>{
+// export const updateAppointment = async(appointmentToUpdate) =>{
+//     try{
+//         const appointmentToUpdate = await Appointments.findOne({_id: appointmentToUpdate})
+
+//        if(!appointmentToUpdate){
+//             throw new ErrorWithStatus("appointment not found", 400)
+//         }
+
+//         // if(appointmentToUpdate.userId !== userId){
+//         //     throw new ErrorWithStatus("You don't have permission to edit this", 400)
+//         // }
+
+//         //await appointmentToUpdate.findOneAndUpdate({_id:appointmentToUpdate})
+//         return {
+//             message: "Changes Saved",
+//             appointments: await getAllAppointment()
+//         }
+
+
+//     } catch(error){
+//         throw new ErrorWithStatus(err.message, 500)
+//     }
+// }
+
+export const deleteAppointment = async(eventId, userIdToCheck) =>{
     try{
-        const appointmentToUpdate = await Appointments.findOne({_id: appointmentToUpdate})
 
-       if(!appointmentToUpdate){
-            throw new ErrorWithStatus("appointment not found", 400)
-        }
+        const appointmentChecker = await Appointments.find({_id: eventId})
 
-        // if(appointmentToUpdate.userId !== userId){
-        //     throw new ErrorWithStatus("You don't have permission to edit this", 400)
-        // }
-
-        //await appointmentToUpdate.findOneAndUpdate({_id:appointmentToUpdate})
-        return {
-            message: "Changes Saved",
-            appointments: await getAllAppointment()
-        }
-
-
-    } catch(error){
-        throw new ErrorWithStatus(err.message, 500)
-    }
-}
-
-export const deleteAppointment = async(appointmenToDelete) =>{
-    try{
-
-        const appointmentChecker = await Appointments.find({_id: appointmenToDelete})
         if(appointmentChecker.length < 1){
             throw new ErrorWithStatus("appointment not found", 400)
         }
 
-        if(appointmentChecker[0].userId !== userId){
+        console.log(userId, userIdToCheck)
+
+        if(userIdToCheck !== userId){
             throw new ErrorWithStatus("You don't have permission to edit this", 400)
         }
 
-        await Appointments.findOneAndDelete({_id: appointmenToDelete})
+        
+        await Appointments.findOneAndDelete({_id: eventId})
         return {
             message: "Appointment Deleted",
             appointments: await getAllAppointment()

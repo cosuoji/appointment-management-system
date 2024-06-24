@@ -9,7 +9,7 @@ import * as appointmentController from "../controllers/appointmentController.js"
 const calendarRoute = Router();
 calendarRoute.get("/",  requiresAuth(), appointmentController.getAllAppointment)
 calendarRoute.post("/",  requiresAuth(), appointmentController.addAppointment)
-calendarRoute.put("/",  requiresAuth(), appointmentController.updateAppointment)
+//calendarRoute.put("/",  requiresAuth(), appointmentController.updateAppointment)
 calendarRoute.delete("/",  requiresAuth(), appointmentController.deleteAppointment)
 
 

@@ -32,24 +32,25 @@ export const addAppointment = async(req, res) =>{
     }
 
 }
-export const updateAppointment = async(req, res) =>{
-    try{
-        const updateAppoint = req.body.todoId;
-        const {update} = req.body
-        const result = await appointmentService.updateAppointment(updateAppoint, result);
-        res.json(result)
+// export const updateAppointment = async(req, res) =>{
+//     try{
+//         const updateAppoint = req.body.todoId;
+//         const {update} = req.body
+//         const result = await appointmentService.updateAppointment(updateAppoint, result);
+//         res.json(result)
 
-    } catch(error){
-      res.status(500).json({message: error.message})
+//     } catch(error){
+//       res.status(500).json({message: error.message})
 
-    }
-}
+//     }
+// }
 
 
 export const deleteAppointment = async(req, res) =>{
     try{
-        const appointmentToDelete = req.body.todoId
-        const result = await appointmentService.deleteAppointment(appointmentToDelete)
+        const {eventId, userId} = req.body
+        let userIdToCheck = userId
+        const result = await appointmentService.deleteAppointment(eventId, userIdToCheck)
         res.json(result)
 
     } catch(error){
