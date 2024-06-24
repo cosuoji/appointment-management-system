@@ -13,7 +13,7 @@ const config = {
   authRequired: false,
   auth0Logout: true,
   secret: process.env.SECRET,
-  baseURL: 'https://appointment-management-system.onrender.com/',
+  baseURL: 'http://localhost:3000',
   clientID: process.env.CLIENT_ID,
   issuerBaseURL: 'https://dev-53cut7r7puvotgqa.us.auth0.com'
 };
@@ -35,6 +35,7 @@ authRoute.get('/', async(req, res)=> {
 
  
  let listOfEvents = await getAllAppointment()
+ 
  //console.log(listOfEvents)
 
     res.render('index', {

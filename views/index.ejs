@@ -30,46 +30,96 @@
                 <h3 style="text-align: center;">Click an event to Modify/Delete it</h3>
         </div>
 
-                <!-- <div id="default-modal" id="myModal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-                    <h3>Modify Current Appointment</h1>
-                        <form id="form" class="flex flex-col justify-center" action="/calendar" method="POST">
-                            <label class="block mb-2 text-lg font-medium text-gray-900 dark:text-white" for="title">Title:</label>
-                            <input class="block mb-2 text-lg font-medium text-gray-900 dark:text-white" type="text" class="form-control"
-                                id="title" name="title" placeholder="Appointment-Title" required>
-                
-                            <label class="block mb-2 text-lg font-medium text-gray-900 dark:text-white" for="start">Appointment Start
-                                Time:</label>
-                            <input class="block mb-2 text-lg font-medium text-gray-900 dark:text-white" type="datetime-local" id="start"
-                                name="start" required>
-                
-                
-                            <label class="block mb-2 text-lg font-medium text-gray-900 dark:text-white" for="end">Appointment End
-                                Time:</label>
-                            <input class="block mb-2 text-lg font-medium text-gray-900 dark:text-white" type="datetime-local" id="end"
-                                name="end" required>
-                
-                            <button id="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                                type="submit">Save
-                                Appointment</button>
-                        </form>
-                </div> -->
+        <div id="myModal" class="modal">
+        
+            <!-- Modal content -->
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                            <h3>Modify appointment</h1>
+                                <form id="modalForm" class="flex flex-col justify-center" action="" method="">
+                                    <label class="block mb-2 text-lg font-medium text-gray-900 dark:text-white" for="title">Title:</label>
+                                    <input class="block mb-2 text-lg font-medium text-gray-900 dark:text-white" type="text" class="form-control"
+                                        id="modalTitle" name="modalTitle" placeholder="Appointment-Title" required>
+                            
+                                    <label class="block mb-2 text-lg font-medium text-gray-900 dark:text-white" for="start">Appointment Start
+                                        Time:</label>
+                                    <input class="block mb-2 text-lg font-medium text-gray-900 dark:text-white" type="datetime-local" id="modalStart"
+                                        name="modalStart" value="" required>
+                            
+                            
+                                    <label class="block mb-2 text-lg font-medium text-gray-900 dark:text-white" for="modalEnd">Appointment End
+                                        Time:</label>
+                                    <input class="block mb-2 text-lg font-medium text-gray-900 dark:text-white" type="datetime-local" id="modalEnd"
+                                        name="modalEnd" required>
+                            
+                                    <button id="modalSave" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="submit">Save
+                                        Appointment</button>
+                                    <button id="modalDelete" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                                        type="submit">Delete
+                                        Appointment</button>
+                                </form>
+
+            </div>
+        
+        </div>
         <% } else { %>
             <p>You are not logged in.<a href="/login" class="underline">Login</a>.</p>
             <% } %>
                 <%- include('partials/footer') -%>
+                <style>
+                    .modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%; /* Could be more or less, depending on screen size */
+}
+
+/* The Close Button */
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+                </style>
                 <script>
 
 
- 
-
                      document.addEventListener('DOMContentLoaded', function () {
-                        var calendarEl = document.getElementById('calendar');
-                        let startTime = document.getElementById("start")
-                        let endTime = document.getElementById("end")
-                        let submit = document.getElementById("submit")
-                        let cheat = document.getElementById("cheat")
+                        var calendarEl = document.getElementById('calendar')
                         let titleOfAppointment = document.getElementById("title")
+                        let modalTitleOfAppointment = document.getElementById("modalTitle")
+                        let startTime = document.getElementById("start")
+                        let modalStartTime = document.getElementById("modalStart")
+                        let endTime = document.getElementById("end")
+                        let modalEndTime = document.getElementById("modalEnd")
+                        let submit = document.getElementById("submit")
                         let modal = document.getElementById("myModal")
+                        var span = document.getElementsByClassName("close")[0];
+                        const dateControl = document.querySelector('input[type="datetime-local"]');
+                        let cheat = document.getElementById("cheat")
                         var now = new Date();
                         var datetime = now.toLocaleString();
                         let calendarObj = {}
@@ -79,11 +129,10 @@
 
                             let eventsArr = []
                              window.app =  <%-listOfEvents %>
-                             //calendarObj = Object.assign(calendarObj, window.app)
                              eventsArr = [...window.app]
-                             console.log(eventsArr)
+                             //console.log(eventsArr)
 
-                        var calendar = new FullCalendar.Calendar(calendarEl, {
+                        let calendar = new FullCalendar.Calendar(calendarEl, {
                             initialView: 'dayGridMonth',
                             initialDate: '2024-06-07',
                             selectable: true, // important for activating date selectability!
@@ -98,31 +147,44 @@
                            events: [...eventsArr],
 
                             eventClick: function (info) {
-
-
                                 
+                                modal.style.display = "block";
+                                modalTitle.value = info.event.title
+                                modalStartTime.value = info.event.start.toISOString().slice(0, -1)
+                                modalEndTime.value = info.event.end.toISOString().slice(0, -1)
+                               
+                                
+                            //     fetch("/calendar", {
+                            //         method: "DELETE", 
+                            //         body: JSON.stringify({
+                            //             eventId: info.event.id,
+                            //             userId: info.event.extendedProps.userId,
+                            //         }), 
+                            //         headers:{
+                            //             "Content-type": "application/json; charset=UTF-8"
+                            //         }
 
-                                fetch("/calendar", {
-                                    method: "DELETE", 
-                                    body: JSON.stringify({
-                                        eventId: info.event.id,
-                                        userId: info.event.extendedProps.userId,
-                                    }), 
-                                    headers:{
-                                        "Content-type": "application/json; charset=UTF-8"
-                                    }
-
-                                }) 
-                                .then((response) => response.json())
-                                .then((json) => {
-                                    if(json.message === "Appointment Deleted"){
-                                        info.event.remove()
-                                    }
-                                    alert(json.message)
-                                 });
-                            }
+                            //     }) 
+                            //     .then((response) => response.json())
+                            //     .then((json) => {
+                            //         if(json.message === "Appointment Deleted"){
+                            //             info.event.remove()
+                            //         }
+                            //         alert(json.message)
+                            //      });
+                             }
 
                         });
+
+                        window.onclick = function (event) {
+                             if (event.target == modal) {
+                                 modal.style.display = "none";
+                             }
+                         }
+
+                         span.onclick = function () {
+                             modal.style.display = "none";
+                         }
 
                     calendar.render();
                       
