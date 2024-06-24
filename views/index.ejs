@@ -30,7 +30,7 @@
                 <h3 style="text-align: center;">Click an event to Modify/Delete it</h3>
         </div>
 
-                <div id="default-modal" id="myModal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                <!-- <div id="default-modal" id="myModal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
                     <h3>Modify Current Appointment</h1>
                         <form id="form" class="flex flex-col justify-center" action="/calendar" method="POST">
                             <label class="block mb-2 text-lg font-medium text-gray-900 dark:text-white" for="title">Title:</label>
@@ -52,7 +52,7 @@
                                 type="submit">Save
                                 Appointment</button>
                         </form>
-                </div>
+                </div> -->
         <% } else { %>
             <p>You are not logged in.<a href="/login" class="underline">Login</a>.</p>
             <% } %>
@@ -100,7 +100,7 @@
                             eventClick: function (info) {
 
 
-                                info.event.remove(),
+                                
 
                                 fetch("/calendar", {
                                     method: "DELETE", 
@@ -114,7 +114,12 @@
 
                                 }) 
                                 .then((response) => response.json())
-                                .then((json) => alert(json.message));
+                                .then((json) => {
+                                    if(json.message === "Appointment Deleted"){
+                                        info.event.remove()
+                                    }
+                                    alert(json.message)
+                                 });
                             }
 
                         });
