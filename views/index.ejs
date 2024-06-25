@@ -202,7 +202,12 @@
 
                                     })
                                         .then((response) => response.json())
-                                        .then((json) => { alert(json.message)});
+                                        .then((json) => {
+                                            if(json.message === "Changes Saved"){
+                                                info.event.setStart(modalStartTime.value)
+                                            }
+                                             alert(json.message)
+                                            });
 
 
                                  })
