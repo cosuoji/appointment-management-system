@@ -51,29 +51,30 @@ export const addAppointment = async(title, start, end) =>{
     }
 }
 
-// export const updateAppointment = async(appointmentToUpdate) =>{
-//     try{
-//         const appointmentToUpdate = await Appointments.findOne({_id: appointmentToUpdate})
+export const updateAppointment = async(eventId, userIdToCheck, start, end) =>{
+    try{
+        const appointmentToUpdate = await Appointments.findOne({_id: eventId})
 
-//        if(!appointmentToUpdate){
-//             throw new ErrorWithStatus("appointment not found", 400)
-//         }
+       if(!appointmentToUpdate){
+            throw new ErrorWithStatus("appointment not found", 400)
+        }
 
-//         // if(appointmentToUpdate.userId !== userId){
-//         //     throw new ErrorWithStatus("You don't have permission to edit this", 400)
-//         // }
+        if(userIdToCheck !== userId){
+            throw new ErrorWithStatus("You don't have permission to edit this", 400)
+        }
 
-//         //await appointmentToUpdate.findOneAndUpdate({_id:appointmentToUpdate})
-//         return {
-//             message: "Changes Saved",
-//             appointments: await getAllAppointment()
-//         }
+        await Appointments.findOneAndUpdate({_id:appointmentToUpdate}, {start: start}, {end: end})
+        
+        return {
+            message: "Changes Saved",
+            appointments: await getAllAppointment()
+        }
 
 
-//     } catch(error){
-//         throw new ErrorWithStatus(err.message, 500)
-//     }
-// }
+    } catch(error){
+        throw new ErrorWithStatus(error.message, 500)
+    }
+}
 
 export const deleteAppointment = async(eventId, userIdToCheck) =>{
     try{
@@ -83,8 +84,6 @@ export const deleteAppointment = async(eventId, userIdToCheck) =>{
         if(appointmentChecker.length < 1){
             throw new ErrorWithStatus("appointment not found", 400)
         }
-
-        console.log(userId, userIdToCheck)
 
         if(userIdToCheck !== userId){
             throw new ErrorWithStatus("You don't have permission to edit this", 400)

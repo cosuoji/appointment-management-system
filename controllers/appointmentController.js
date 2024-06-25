@@ -22,8 +22,7 @@ export const addAppointment = async(req, res) =>{
     try{
        
         const {title, start, end}  = req.body
-        console.log(title, start, end)
-        let result = await appointmentService.addAppointment(title, start, end)
+        await appointmentService.addAppointment(title, start, end)
         res.redirect("/")
 
 
@@ -32,18 +31,20 @@ export const addAppointment = async(req, res) =>{
     }
 
 }
-// export const updateAppointment = async(req, res) =>{
-//     try{
-//         const updateAppoint = req.body.todoId;
-//         const {update} = req.body
-//         const result = await appointmentService.updateAppointment(updateAppoint, result);
-//         res.json(result)
 
-//     } catch(error){
-//       res.status(500).json({message: error.message})
+export const updateAppointment = async(req, res) =>{
+    try{
+        const {eventId, userId, start, end} = req.body;
+        console.log(eventId, userId, start, end)
+        let userIdToCheck = userId
+        const result = await appointmentService.updateAppointment(eventId, userIdToCheck, start, end);
+        res.json(result)
 
-//     }
-// }
+    } catch(error){
+      res.status(500).json({message: error.message})
+
+    }
+}
 
 
 export const deleteAppointment = async(req, res) =>{

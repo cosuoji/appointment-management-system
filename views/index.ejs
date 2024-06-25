@@ -36,7 +36,7 @@
             <div class="modal-content">
                 <span class="close">&times;</span>
                             <h3>Modify appointment</h1>
-                                <form id="modalForm" class="flex flex-col justify-center" action="" method="">
+                                <form id="modalForm" class="flex flex-col justify-center">
                                     <label class="block mb-2 text-lg font-medium text-gray-900 dark:text-white" for="title">Title:</label>
                                     <input class="block mb-2 text-lg font-medium text-gray-900 dark:text-white" type="text" class="form-control"
                                         id="modalTitle" name="modalTitle" placeholder="Appointment-Title" required>
@@ -44,18 +44,18 @@
                                     <label class="block mb-2 text-lg font-medium text-gray-900 dark:text-white" for="start">Appointment Start
                                         Time:</label>
                                     <input class="block mb-2 text-lg font-medium text-gray-900 dark:text-white" type="datetime-local" id="modalStart"
-                                        name="modalStart" value="" required>
+                                        name="modalStart">
                             
                             
                                     <label class="block mb-2 text-lg font-medium text-gray-900 dark:text-white" for="modalEnd">Appointment End
                                         Time:</label>
                                     <input class="block mb-2 text-lg font-medium text-gray-900 dark:text-white" type="datetime-local" id="modalEnd"
-                                        name="modalEnd" required>
+                                        name="modalEnd">
                             
                                     <button id="modalSave" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="submit">Save
                                         Appointment</button>
                                     <button id="modalDelete" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                                        type="submit">Delete
+                                        type="button" formmethod="post" formaction="/calendar/">Delete
                                         Appointment</button>
                                 </form>
 
@@ -118,14 +118,17 @@
                         let submit = document.getElementById("submit")
                         let modal = document.getElementById("myModal")
                         var span = document.getElementsByClassName("close")[0];
-                        const dateControl = document.querySelector('input[type="datetime-local"]');
-                        let cheat = document.getElementById("cheat")
                         var now = new Date();
                         var datetime = now.toLocaleString();
                         let calendarObj = {}
+                        let modalDelete = document.getElementById("modalDelete")
+                        let modalSave = document.getElementById("modalSave")
 
+                        modalStartTime.min = new Date().toISOString().slice(0, new Date().toISOString().lastIndexOf(":"));
                         startTime.min = new Date().toISOString().slice(0, new Date().toISOString().lastIndexOf(":"));
                         endTime.min = new Date().toISOString().slice(0, new Date().toISOString().lastIndexOf(":"));
+                        modalEndTime.min = new Date().toISOString().slice(0, new Date().toISOString().lastIndexOf(":"));
+
 
                             let eventsArr = []
                              window.app =  <%-listOfEvents %>
@@ -151,27 +154,61 @@
                                 modal.style.display = "block";
                                 modalTitle.value = info.event.title
                                 modalStartTime.value = info.event.start.toISOString().slice(0, -1)
-                                modalEndTime.value = info.event.end.toISOString().slice(0, -1)
-                               
-                                
-                            //     fetch("/calendar", {
-                            //         method: "DELETE", 
-                            //         body: JSON.stringify({
-                            //             eventId: info.event.id,
-                            //             userId: info.event.extendedProps.userId,
-                            //         }), 
-                            //         headers:{
-                            //             "Content-type": "application/json; charset=UTF-8"
-                            //         }
+                                modalEndTime.value = info.event.end
 
-                            //     }) 
-                            //     .then((response) => response.json())
-                            //     .then((json) => {
-                            //         if(json.message === "Appointment Deleted"){
-                            //             info.event.remove()
-                            //         }
-                            //         alert(json.message)
-                            //      });
+                                console.log(info.event.end)
+                        
+                                modalDelete.addEventListener("click", e =>{
+                                    e.preventDefault()
+                                    modal.style.display = "none"
+
+                                     fetch("/calendar", {
+                                        method: "DELETE",
+                                        body: JSON.stringify({
+                                            eventId: info.event.id,
+                                            userId: info.event.extendedProps.userId,
+                                        }),
+                                        headers: {
+                                            "Content-type": "application/json; charset=UTF-8"
+                                        }
+
+                                    })
+                                        .then((response) => response.json())
+                                        .then((json) => {
+                                            if (json.message === "Appointment Deleted") {
+                                                info.event.remove()
+                                            }
+                                            alert(json.message)
+                                        });
+
+
+                                })
+
+                                modalSave.addEventListener("click", e => {
+                                    e.preventDefault()
+                                    modal.style.display = "none"
+
+                                    fetch("/calendar", {
+                                        method: "PUT",
+                                        body: JSON.stringify({
+                                            eventId: info.event.id,
+                                            userId: info.event.extendedProps.userId,
+                                            start: modalStartTime.value,
+                                            end: modalEndTime.value
+                                        }),
+                                        headers: {
+                                            "Content-type": "application/json; charset=UTF-8"
+                                        }
+
+                                    })
+                                        .then((response) => response.json())
+                                        .then((json) => { alert(json.message)});
+
+
+                                 })
+
+
+
                              }
 
                         });
