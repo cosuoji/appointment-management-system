@@ -18,11 +18,11 @@
                     <input class="block mb-2 text-lg font-medium text-gray-900 dark:text-white" type="datetime-local" id="start"
                         name="start" required>
         
-        
+<!--         
                     <label class="block mb-2 text-lg font-medium text-gray-900 dark:text-white" for="end">Appointment End
                         Time:</label>
                     <input class="block mb-2 text-lg font-medium text-gray-900 dark:text-white" type="datetime-local" id="end"
-                        name="end" required>
+                        name="end" required> -->
         
                     <button id="save" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="submit">Add
                         Appointment</button>
@@ -47,11 +47,11 @@
                                         name="modalStart">
                             
                             
-                                    <label class="block mb-2 text-lg font-medium text-gray-900 dark:text-white" for="modalEnd">Appointment End
+                                    <!-- <label class="block mb-2 text-lg font-medium text-gray-900 dark:text-white" for="modalEnd">Appointment End
                                         Time:</label>
                                     <input class="block mb-2 text-lg font-medium text-gray-900 dark:text-white" type="datetime-local" id="modalEnd"
                                         name="modalEnd">
-                            
+                             -->
                                     <button id="modalSave" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="submit">Save
                                         Appointment</button>
                                     <button id="modalDelete" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
@@ -113,8 +113,8 @@
                         let modalTitleOfAppointment = document.getElementById("modalTitle")
                         let startTime = document.getElementById("start")
                         let modalStartTime = document.getElementById("modalStart")
-                        let endTime = document.getElementById("end")
-                        let modalEndTime = document.getElementById("modalEnd")
+                        //let endTime = document.getElementById("end")
+                        //let modalEndTime = document.getElementById("modalEnd")
                         let submit = document.getElementById("submit")
                         let modal = document.getElementById("myModal")
                         var span = document.getElementsByClassName("close")[0];
@@ -126,8 +126,8 @@
 
                         modalStartTime.min = new Date().toISOString().slice(0, new Date().toISOString().lastIndexOf(":"));
                         startTime.min = new Date().toISOString().slice(0, new Date().toISOString().lastIndexOf(":"));
-                        endTime.min = new Date().toISOString().slice(0, new Date().toISOString().lastIndexOf(":"));
-                        modalEndTime.min = new Date().toISOString().slice(0, new Date().toISOString().lastIndexOf(":"));
+                        //endTime.min = new Date().toISOString().slice(0, new Date().toISOString().lastIndexOf(":"));
+                        //modalEndTime.min = new Date().toISOString().slice(0, new Date().toISOString().lastIndexOf(":"));
 
 
                             let eventsArr = []
@@ -154,9 +154,9 @@
                                 modal.style.display = "block";
                                 modalTitle.value = info.event.title
                                 modalStartTime.value = info.event.start.toISOString().slice(0, -1)
-                                modalEndTime.value = info.event.end
+                                //modalEndTime.value = info.event.end.toISOString().slice(0, -1)
 
-                                console.log(info.event.end)
+                                
                         
                                 modalDelete.addEventListener("click", e =>{
                                     e.preventDefault()
@@ -194,7 +194,7 @@
                                             eventId: info.event.id,
                                             userId: info.event.extendedProps.userId,
                                             start: modalStartTime.value,
-                                            end: modalEndTime.value
+                                            //end: modalEndTime.value
                                         }),
                                         headers: {
                                             "Content-type": "application/json; charset=UTF-8"

@@ -21,8 +21,8 @@ export const getAllAppointment = async(req, res, next) =>{
 export const addAppointment = async(req, res) =>{
     try{
        
-        const {title, start, end}  = req.body
-        await appointmentService.addAppointment(title, start, end)
+        const {title, start}  = req.body
+        await appointmentService.addAppointment(title, start)
         res.redirect("/")
 
 
@@ -34,10 +34,10 @@ export const addAppointment = async(req, res) =>{
 
 export const updateAppointment = async(req, res) =>{
     try{
-        const {eventId, userId, start, end} = req.body;
-        console.log(eventId, userId, start, end)
+        const {eventId, userId, start} = req.body;
+        console.log(eventId, userId, start)
         let userIdToCheck = userId
-        const result = await appointmentService.updateAppointment(eventId, userIdToCheck, start, end);
+        const result = await appointmentService.updateAppointment(eventId, userIdToCheck, start);
         res.json(result)
 
     } catch(error){

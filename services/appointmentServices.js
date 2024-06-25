@@ -16,7 +16,6 @@ export const getAllAppointment = async() =>{
          objToUseToPopulate.id = appointments[i]._id.toHexString()
          objToUseToPopulate.title = appointments[i].title
          objToUseToPopulate.start = appointments[i].start
-         objToUseToPopulate.end = appointments[i].end
          appointmentObj.push(objToUseToPopulate)
 
         }
@@ -34,7 +33,7 @@ export const getAllAppointment = async() =>{
 export const addAppointment = async(title, start, end) =>{
     try{
        // const userToUpDate = await Appointments.findOne({auth0Id: userId})
-        const newAppointment = new Appointments({title:title, name: name, nickname: nickname, start: start, end: end, auth0Id: userId, });
+        const newAppointment = new Appointments({title:title, name: name, nickname: nickname, start: start,auth0Id: userId, });
         await newAppointment.save();
 
         let result = await getAllAppointment()
@@ -51,7 +50,7 @@ export const addAppointment = async(title, start, end) =>{
     }
 }
 
-export const updateAppointment = async(eventId, userIdToCheck, start, end) =>{
+export const updateAppointment = async(eventId, userIdToCheck, start) =>{
     try{
         const appointmentToUpdate = await Appointments.findOne({_id: eventId})
 
@@ -63,7 +62,7 @@ export const updateAppointment = async(eventId, userIdToCheck, start, end) =>{
             throw new ErrorWithStatus("You don't have permission to edit this", 400)
         }
 
-        await Appointments.findOneAndUpdate({_id:appointmentToUpdate}, {start: start}, {end: end})
+        await Appointments.findOneAndUpdate({_id:appointmentToUpdate}, {start: start})
         
         return {
             message: "Changes Saved",

@@ -22,12 +22,7 @@ const appointmemtSchema = mongoose.Schema({
     start:{
         type: String,
         required: true,
-    }, 
-    end:{
-     type: Date,
-     required: true,
-    }
-
+    },
 }, {timestamps: true})
 
 const Appointments = mongoose.model("appointments", appointmemtSchema)
