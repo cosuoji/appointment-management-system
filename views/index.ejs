@@ -135,6 +135,11 @@
                              eventsArr = [...window.app]
                              //console.log(eventsArr)
 
+                        let event_trackers = {
+                            modal_delete: 0,
+                            modal_save: 0,
+                        }
+
                         let calendar = new FullCalendar.Calendar(calendarEl, {
                             initialView: 'dayGridMonth',
                             initialDate: '2024-06-07',
@@ -183,6 +188,14 @@
 
                                 })
 
+                                event_trackers.modal_delete += 1
+
+                                console.log({
+                                    action: 'log-event-listener-creation',
+                                    event: 'modal-delete',
+                                    total_created: event_trackers?.modal_delete,
+                                })
+
                                 modalSave.addEventListener("click", e => {
                                     e.preventDefault()
                                     modal.style.display = "none"
@@ -210,6 +223,14 @@
 
 
                                  })
+
+                                event_trackers.modal_save += 1
+
+                                console.log({
+                                    action: 'log-event-listener-creation',
+                                    event: 'modal-save',
+                                    total_created: event_trackers?.modal_save,
+                                })
 
 
 
