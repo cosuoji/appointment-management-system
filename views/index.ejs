@@ -150,12 +150,11 @@
                            events: [...eventsArr],
 
                             eventClick: function (info) {
+                                console.log("yeah")
                                 
                                 modal.style.display = "block";
                                 modalTitle.value = info.event.title
                                 modalStartTime.value = info.event.start.toISOString().slice(0, -1)
-                                //modalEndTime.value = info.event.end.toISOString().slice(0, -1)
-
                                 
                         
                                 modalDelete.addEventListener("click", e =>{

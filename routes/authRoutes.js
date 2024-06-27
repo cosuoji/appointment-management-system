@@ -13,7 +13,8 @@ const config = {
   authRequired: false,
   auth0Logout: true,
   secret: process.env.SECRET,
-  baseURL: 'https://appointment-management-system.onrender.com/',
+   baseURL: 'http://localhost:3000',
+  //baseURL: 'https://appointment-management-system.onrender.com/',
   clientID: process.env.CLIENT_ID,
   issuerBaseURL: 'https://dev-53cut7r7puvotgqa.us.auth0.com'
 };
