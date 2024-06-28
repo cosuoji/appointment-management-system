@@ -44,7 +44,7 @@
                                     <label class="block mb-2 text-lg font-medium text-gray-900 dark:text-white" for="start">Appointment Start
                                         Time:</label>
                                     <input class="block mb-2 text-lg font-medium text-gray-900 dark:text-white" type="datetime-local" id="modalStart"
-                                        name="modalStart">
+                                        name="modalStart" data-eventid="" data-userId="">
                             
                             
                                     <!-- <label class="block mb-2 text-lg font-medium text-gray-900 dark:text-white" for="modalEnd">Appointment End
@@ -113,8 +113,6 @@
                         let modalTitleOfAppointment = document.getElementById("modalTitle")
                         let startTime = document.getElementById("start")
                         let modalStartTime = document.getElementById("modalStart")
-                        //let endTime = document.getElementById("end")
-                        //let modalEndTime = document.getElementById("modalEnd")
                         let submit = document.getElementById("submit")
                         let modal = document.getElementById("myModal")
                         var span = document.getElementsByClassName("close")[0];
@@ -126,8 +124,72 @@
 
                         modalStartTime.min = new Date().toISOString().slice(0, new Date().toISOString().lastIndexOf(":"));
                         startTime.min = new Date().toISOString().slice(0, new Date().toISOString().lastIndexOf(":"));
-                        //endTime.min = new Date().toISOString().slice(0, new Date().toISOString().lastIndexOf(":"));
-                        //modalEndTime.min = new Date().toISOString().slice(0, new Date().toISOString().lastIndexOf(":"));
+
+
+                     modalDelete.addEventListener("click", e => {
+                             e.preventDefault()
+                             modal.style.display = "none"
+                             
+                            
+                             fetch("/calendar", {
+                                 method: "DELETE",
+                                 body: JSON.stringify({
+                                     eventId: modalDelete.dataset.eventId,
+                                     userId: modalDelete.dataset.userId,
+                                 }),
+                                 headers: {
+                                     "Content-type": "application/json; charset=UTF-8"
+                                 }
+
+                             })
+                                 .then((response) => response.json())
+                                 .then((json) => {
+                                    alert(json.message)
+
+                                    if(json.message === "Appointment Deleted"){
+                                        let result = calendar.getEventById(modalDelete.dataset.eventId);
+                                        result.remove()                                    
+                                    }
+                                     modalDelete.dataset.userId = "";
+                                     modalDelete.dataset.eventId = "";
+                                 });
+
+                         })
+
+
+                    modalSave.addEventListener("click", e => {
+                             e.preventDefault()
+                             modal.style.display = "none"
+
+                             fetch("/calendar", {
+                                 method: "PUT",
+                                 body: JSON.stringify({
+                                     eventId: modalDelete.dataset.eventId,
+                                     userId: modalDelete.dataset.userId,
+                                     start: modalStartTime.value,
+                                     //end: modalEndTime.value
+                                 }),
+                                 headers: {
+                                     "Content-type": "application/json; charset=UTF-8"
+                                 }
+
+                             })
+                                 .then((response) => response.json())
+                                 .then((json) => {
+                                    let result = calendar.getEventById(modalDelete.dataset.eventId);
+                                    result.setStart(modalStartTime.value)
+                                     alert(json.message)
+                                     modalDelete.dataset.userId = '';
+                                     modalDelete.dataset.eventId = '';
+
+                                 });
+
+
+                         })
+                           
+    
+                                                    
+ 
 
 
                             let eventsArr = []
@@ -135,6 +197,7 @@
                              eventsArr = [...window.app]
                              //console.log(eventsArr)
 
+                   
                         let calendar = new FullCalendar.Calendar(calendarEl, {
                             initialView: 'dayGridMonth',
                             initialDate: '2024-06-07',
@@ -150,68 +213,12 @@
                            events: [...eventsArr],
 
                             eventClick: function (info) {
-                                console.log("yeah")
-                                
+
                                 modal.style.display = "block";
                                 modalTitle.value = info.event.title
-                                modalStartTime.value = info.event.start.toISOString().slice(0, -1)
-                                
-                        
-                                modalDelete.addEventListener("click", e =>{
-                                    e.preventDefault()
-                                    modal.style.display = "none"
-
-                                     fetch("/calendar", {
-                                        method: "DELETE",
-                                        body: JSON.stringify({
-                                            eventId: info.event.id,
-                                            userId: info.event.extendedProps.userId,
-                                        }),
-                                        headers: {
-                                            "Content-type": "application/json; charset=UTF-8"
-                                        }
-
-                                    })
-                                        .then((response) => response.json())
-                                        .then((json) => {
-                                            if (json.message === "Appointment Deleted") {
-                                                info.event.remove()
-                                            }
-                                            alert(json.message)
-                                        });
-
-
-                                })
-
-                                modalSave.addEventListener("click", e => {
-                                    e.preventDefault()
-                                    modal.style.display = "none"
-
-                                    fetch("/calendar", {
-                                        method: "PUT",
-                                        body: JSON.stringify({
-                                            eventId: info.event.id,
-                                            userId: info.event.extendedProps.userId,
-                                            start: modalStartTime.value,
-                                            //end: modalEndTime.value
-                                        }),
-                                        headers: {
-                                            "Content-type": "application/json; charset=UTF-8"
-                                        }
-
-                                    })
-                                        .then((response) => response.json())
-                                        .then((json) => {
-                                            if(json.message === "Changes Saved"){
-                                                info.event.setStart(modalStartTime.value)
-                                            }
-                                             alert(json.message)
-                                            });
-
-
-                                 })
-
-
+                                modalStartTime.value = info.event.start.toISOString().slice(0, -1)  
+                                modalDelete.dataset.eventId = info.event.id 
+                                modalDelete.dataset.userId = info.event.extendedProps.userId
 
                              }
 
